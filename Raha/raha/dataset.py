@@ -59,9 +59,6 @@ class Dataset:
         """
         dataframe = pandas.read_csv(dataset_path, sep=",", header="infer", encoding="utf-8", dtype=str,
                                     keep_default_na=False, low_memory=False).applymap(self.value_normalizer)
-        # This line is only needed for the ones who have different null values in their datasets.
-        dataframe = dataframe.replace('', 'NULL')
-        dataframe = dataframe.applymap(lambda x: x.replace('"', '') if isinstance(x, str) else x)
         return dataframe
 
     @staticmethod
