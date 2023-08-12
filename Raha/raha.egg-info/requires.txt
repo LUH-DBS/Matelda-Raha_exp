@@ -1,0 +1,9 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+prettytable
+mwparserfromhell
+beautifulsoup4
+py7zr

@@ -1,0 +1,101 @@
+import logging
+import os
+import pickle
+from random import shuffle
+import pandas as pd
+
+
+    
+def run_raha(dataset, results_path, labeling_budget, exec_number):
+    python_script = f'''python raha/detection.py \
+                            --results_path {results_path}\
+                            --base_path {dataset}\
+                            --dataset {os.path.basename(dataset)}\
+                            --labeling_budget {labeling_budget} \
+                            --execution_number {exec_number}'''
+    print(python_script)
+    os.system(python_script)
+
+def distribute_labels(labeling_budget_cells, sandbox_path):
+    datasets_shape = dict()
+    datasets_budget = dict()
+    datasets_num_cells = dict()
+
+    num_cols = 0
+    num_rows = 0
+    num_cells = 0
+
+    for dir in os.listdir(sandbox_path):
+        try:
+            dataset_path = os.path.join(sandbox_path , dir)
+            df = pd.read_csv(os.path.join(dataset_path, "dirty.csv"), sep=",", header="infer", encoding="utf-8", dtype=str,
+                                        low_memory=False)
+            datasets_shape[dataset_path] = df.shape
+            num_cells_dataset = df.size
+            datasets_num_cells[dataset_path] = num_cells_dataset
+            datasets_budget[dataset_path] = 0
+            num_cols += df.shape[1]
+            num_rows += df.shape[0]
+            num_cells += num_cells_dataset
+        except Exception as e:
+            print(dir, e)    
+
+    if labeling_budget_cells % num_cols == 0:
+        labeling_budget_tuples_per_table = labeling_budget_cells / num_cols
+        for dataset in datasets_shape:
+            datasets_budget[dataset] =  labeling_budget_tuples_per_table
+    else:
+        asssigned_labels = 0 
+        non_eligable_datasets = 0
+        while labeling_budget_cells > asssigned_labels and non_eligable_datasets < len(datasets_shape):
+            dataset_names = list(datasets_num_cells.keys())
+            shuffle(dataset_names)
+            for dataset in dataset_names:
+                dataset_num_cols = datasets_shape[dataset][1]
+                remained_labels = labeling_budget_cells - asssigned_labels
+                if  remained_labels >= dataset_num_cols:
+                    datasets_budget[dataset] += 1 
+                    asssigned_labels += dataset_num_cols
+                    non_eligable_datasets = 0
+                else:
+                    non_eligable_datasets +=1 
+
+    with open(os.path.join(results_path, f"labeling_budget_{labeling_budget_cells}.pickle"), "wb") as f:
+        pickle.dump(datasets_budget, f)
+    return datasets_budget 
+
+def run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_number):
+    for label_budget in labeling_budget_cells:
+        logging.info(f"label_budget: {label_budget}")
+        datasets_budget = distribute_labels(label_budget, sandbox_path)
+        for dataset in datasets_budget:
+            logging.info(f"dataset: {dataset}")
+            try:
+                if datasets_budget[dataset] > 0:
+                    
+                    results_path_raha = os.path.join(results_path, "results_" + str(label_budget) + "_"  + str(exec_number))
+                    if not os.path.exists(results_path_raha):
+                        os.makedirs(results_path_raha)
+                    run_raha(dataset, results_path_raha, datasets_budget[dataset], exec_number)
+                else:
+                    logging.info(f"dataset {dataset} has no labeling budget")
+            except Exception as e:
+                print(dataset, e)
+
+
+exp_name = "raha-non-enough-labels-kaggle"
+logging.basicConfig(filename=f'raha/logs/{exp_name}.log', level=logging.DEBUG)
+
+repition = range(1, 11)
+# labeling_budget_cells = [11, 22, 33, 77, 88, 99, 101, 112] - raha
+labeling_budget_cells = [25, 49, 98, 196, 245, ] # kaggle
+sandbox_path = "raha/datasets/raha-datasets"
+results_path = os.path.join("/home/fatemeh/EDS-BaseLines/Raha/raha/output", f"exp_{exp_name}")
+if not os.path.exists(results_path):
+    os.makedirs(results_path)
+
+if __name__ == "__main__":
+   for exec_number in repition:
+        logging.info(f"exec_number: {exec_number}")
+        run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_number)  
+
