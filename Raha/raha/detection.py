@@ -54,7 +54,7 @@ class Detection:
         """
         self.LABELING_BUDGET = labeling_budget
         self.USER_LABELING_ACCURACY = 1.0
-        self.VERBOSE = True
+        self.VERBOSE = False
         self.SAVE_RESULTS = False
         self.CLUSTERING_BASED_SAMPLING = True
         self.STRATEGY_FILTERING = False
@@ -461,21 +461,8 @@ class Detection:
 
 
 ########################################
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--base_path", help="dataset path")
-    parser.add_argument("--results_path", help="dataset path")
-    parser.add_argument("--dataset", help="Dataset Name (dataset main directory name)")
-    parser.add_argument("--labeling_budget", help="labeling budget, number of tuples")
-    parser.add_argument("--execution_number", help="experiment repition")
-    args = parser.parse_args()
-
-    results_path = args.results_path
-    dataset_path = args.base_path
-    dataset_name = args.dataset
-    labeling_budget = int(args.labeling_budget)
-    execution_number = int(args.execution_number)
-
+def main(results_path, dataset_path, dataset_name, labeling_budget, execution_number):
+    
     start_time = time.time()
     dataset_dictionary = {
         "name": dataset_name,
@@ -504,22 +491,3 @@ if __name__ == "__main__":
         pickle.dump(actuall_errors_dict, act)
     # print("Raha's performance on {}:\nPrecision = {:.2f}\nRecall = {:.2f}\nF1 = {:.2f}".format(data.name, metrics["ed_p"], metrics["ed_r"], metrics["ed_f"]))
     print(end_time - start_time)
-    # --------------------
-    # app.STRATEGY_FILTERING = True
-    # app.HISTORICAL_DATASETS = [
-    #     {
-    #     "name": "hospital",
-    #     "path": "/media/mohammad/C20E45C80E45B5E7/Projects/raha/datasets/hospital/dirty.csv",
-    #     "clean_path": "/media/mohammad/C20E45C80E45B5E7/Projects/raha/datasets/hospital/clean.csv"
-    #     },
-    #     {
-    #     "name": "beers",
-    #     "path": "/media/mohammad/C20E45C80E45B5E7/Projects/raha/datasets/beers/dirty.csv",
-    #     "clean_path": "/media/mohammad/C20E45C80E45B5E7/Projects/raha/datasets/beers/clean.csv"
-    #     }
-    # ]
-    # detection_dictionary = app.run(dataset_dictionary)
-    # data = raha.dataset.Dataset(dataset_dictionary)
-    # p, r, f = data.get_data_cleaning_evaluation(detection_dictionary)[:3]
-    # print("Raha's performance on {}:\nPrecision = {:.2f}\nRecall = {:.2f}\nF1 = {:.2f}".format(data.name, p, r, f))
-#######################################
