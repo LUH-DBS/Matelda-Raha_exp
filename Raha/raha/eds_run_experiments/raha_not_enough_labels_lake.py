@@ -3,18 +3,12 @@ import os
 import pickle
 from random import shuffle
 import pandas as pd
-
+from raha.detection import main
 
     
-def run_raha(dataset, results_path, labeling_budget, exec_number):
-    python_script = f'''python raha/detection.py \
-                            --results_path {results_path}\
-                            --base_path {dataset}\
-                            --dataset {os.path.basename(dataset)}\
-                            --labeling_budget {labeling_budget} \
-                            --execution_number {exec_number}'''
-    print(python_script)
-    os.system(python_script)
+def run_raha(dataset_path, results_path, labeling_budget, exec_number):
+    main(results_path, dataset_path, os.path.basename(dataset_path), 
+         labeling_budget, exec_number, column_wise_evaluation=False, column_idx=0)
 
 def distribute_labels(labeling_budget_cells, sandbox_path):
     datasets_shape = dict()
@@ -83,17 +77,19 @@ def run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_numb
                 print(dataset, e)
 
 
-exp_name = "raha-non-enough-labels-kaggle"
-logging.basicConfig(filename=f'raha/logs/{exp_name}.log', level=logging.DEBUG)
+exp_name = "raha-non-enough-labels-dgov-141"
+logging.basicConfig(filename=f'/home/fatemeh/VLDB-Aug/results/raha-dgov-141/logs/{exp_name}.log', level=logging.DEBUG)
 
-repition = range(1, 11)
-# labeling_budget_cells = [11, 22, 33, 77, 88, 99, 101, 112] - raha
-labeling_budget_cells = [25, 49, 98, 196, 245, ] # kaggle
-sandbox_path = "raha/datasets/raha-datasets"
-results_path = os.path.join("/home/fatemeh/EDS-BaseLines/Raha/raha/output", f"exp_{exp_name}")
+repition = range(1, 6)
+# labeling_budget = [0.10, 0.25, 0.5, 0.75]
+# n_cols = 768
+# labeling_budget_cells = [round(n_cols*x) for x in labeling_budget]
+labeling_budget_cells = [158, 336, 672, 1008]
+n_cols = 1343
+sandbox_path = "/home/fatemeh/VLDB-Aug/EDS-Raha_exp/Raha/raha/datasets/DGov-141"
+results_path = os.path.join("/home/fatemeh/VLDB-Aug/results/raha-dgov-141", f"exp_{exp_name}")
 if not os.path.exists(results_path):
     os.makedirs(results_path)
-
 if __name__ == "__main__":
    for exec_number in repition:
         logging.info(f"exec_number: {exec_number}")

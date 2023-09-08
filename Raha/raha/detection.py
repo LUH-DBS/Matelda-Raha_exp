@@ -54,8 +54,8 @@ class Detection:
         """
         self.LABELING_BUDGET = labeling_budget
         self.USER_LABELING_ACCURACY = 1.0
-        self.VERBOSE = False
-        self.SAVE_RESULTS = False
+        self.VERBOSE = True
+        self.SAVE_RESULTS = True
         self.CLUSTERING_BASED_SAMPLING = True
         self.STRATEGY_FILTERING = False
         self.CLASSIFICATION_MODEL = "GBC"  # ["ABC", "DTC", "GBC", "GNB", "SGDC", "SVC"]
@@ -461,7 +461,7 @@ class Detection:
 
 
 ########################################
-def main(results_path, dataset_path, dataset_name, labeling_budget, execution_number):
+def main(results_path, dataset_path, dataset_name, labeling_budget, execution_number, column_wise_evaluation, column_idx):
     
     start_time = time.time()
     dataset_dictionary = {
@@ -474,13 +474,16 @@ def main(results_path, dataset_path, dataset_name, labeling_budget, execution_nu
     end_time = time.time()
     data = raha.dataset.Dataset(dataset_dictionary)
     detected_errors = list(detection_dictionary.keys())
-    metrics = data.get_data_cleaning_evaluation(detection_dictionary)
+    if column_wise_evaluation:
+        metrics = data.get_data_cleaning_evaluation_selected_col(detection_dictionary, sampled_rows_dictionary=False, col_idx=column_idx)
+    else:
+        metrics = data.get_data_cleaning_evaluation(detection_dictionary)
     results = {'dataset_path': dataset_path, 'dataset_name': dataset_name, 'execution_number': execution_number, 'dataset_shape': data.dataframe.shape, 
                'precision': metrics["ed_p"], 'recall': metrics["ed_r"], 'f_score': metrics["ed_f"],
                'tp': metrics["ed_tp"], 'ed_tpfp': metrics["output_size"], 'ed_tpfn': metrics["actual_errors"],
                'execution-time': end_time - start_time, 'number_of_labeled_tuples': labeling_budget,
                'number_of_labeled_cells': len(labeled_cells), 'detected_errors_keys': detected_errors}
-    result_file_path = os.path.join(results_path, f'''raha_{dataset_name}_number#{execution_number}_${labeling_budget}$labels.json''')
+    result_file_path = os.path.join(results_path, f'''raha_{dataset_name}_col_{column_idx}_number#{execution_number}_${labeling_budget}$labels.json''')
     act_errors_dirs = os.path.join(results_path, "act_errors")
     if not os.path.exists(act_errors_dirs):
         os.makedirs(act_errors_dirs)

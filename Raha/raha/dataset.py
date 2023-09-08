@@ -137,6 +137,53 @@ class Dataset:
                    "output_size": output_size, "actual_errors": len(actual_errors)
                    }
         return metrics
+    
+    def get_data_cleaning_evaluation_selected_col(self, correction_dictionary, sampled_rows_dictionary, col_idx):
+        """
+        This method evaluates data cleaning process.
+        """
+        print("column wise evaluation")
+        actual_errors = self.get_actual_errors_dictionary()
+        keys_to_delete = []
+        for key in list(actual_errors.keys()):
+            if key[1] != col_idx:
+                keys_to_delete.append(key)
+        
+        for key in keys_to_delete:
+            actual_errors.pop(key)
+
+        keys_to_delete = []
+        for key in list(correction_dictionary.keys()):
+            if key[1] != col_idx:
+                keys_to_delete.append(key)
+        
+        for key in keys_to_delete:
+            correction_dictionary.pop(key)
+
+        if sampled_rows_dictionary:
+            actual_errors = {(i, j): actual_errors[(i, j)] for (i, j) in actual_errors if i in sampled_rows_dictionary}
+        ed_tp = 0.0
+        ec_tp = 0.0
+        output_size = 0.0
+        for cell in correction_dictionary:
+            if (not sampled_rows_dictionary) or (cell[0] in sampled_rows_dictionary):
+                output_size += 1
+                if cell in actual_errors:
+                    ed_tp += 1.0
+                    if correction_dictionary[cell] == actual_errors[cell]:
+                        ec_tp += 1.0
+        ed_p = 0.0 if output_size == 0 else ed_tp / output_size
+        ed_r = 0.0 if len(actual_errors) == 0 else ed_tp / len(actual_errors)
+        ed_f = 0.0 if (ed_p + ed_r) == 0.0 else (2 * ed_p * ed_r) / (ed_p + ed_r)
+        ec_p = 0.0 if output_size == 0 else ec_tp / output_size
+        ec_r = 0.0 if len(actual_errors) == 0 else ec_tp / len(actual_errors)
+        ec_f = 0.0 if (ec_p + ec_r) == 0.0 else (2 * ec_p * ec_r) / (ec_p + ec_r)
+
+        metrics = {"ed_p": ed_p, "ed_r": ed_r, "ed_f": ed_f, "ed_tp": ed_tp,
+                   "ec_p": ec_p, "ec_r": ec_r, "ec_f": ec_f, "ec_tp": ec_tp,
+                   "output_size": output_size, "actual_errors": len(actual_errors)
+                   }
+        return metrics
 ########################################
 
 
