@@ -14,5 +14,8 @@ In this version, the datasets are shuffled and then assigned one label at a time
 
 ## Installation
 1. Create a fresh python environment
-2. ``cd raha``
-3. ``pip install -e .``
+2. ```shell
+   cd raha 
+   pip install -e .
+   ```
+## Usage
