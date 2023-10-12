@@ -3,7 +3,7 @@ defaults:
   - shared
 
 experiment:
-  labeling_budgets: [1, 2, 3, 5, 10, 15, 20]
+  labeling_budgets: [1, 2, 3, 5, 10, 15, 20] # labeling budgets used in Raha
 
 logs:
-  path_to_log_file: "./logs/raha-Standard.log"
+  path_to_log_file: "./logs/raha-Standard.log" # path pointing to the location where the logs should be stored

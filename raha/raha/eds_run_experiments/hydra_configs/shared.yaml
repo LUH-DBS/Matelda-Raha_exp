@@ -1,5 +1,5 @@
 shared:
   sandbox_path: "./test_sandbox" # path pointing to the data lake, where the experiments should be executed
-  results_path: "./results"
+  results_path: "./results" # path pointing towards a folder where the results of the experimetns should be stored
 
-  repetitions: 5
+  repetitions: 5 # the amount of time an experiment configuration should be executed
