@@ -13,23 +13,30 @@ In this version, the datasets are shuffled and then assigned one label at a time
 
 
 ## Installation
-1. Create a fresh python environment
-2. ```shell
-   cd raha 
-   pip install -e .
-   ```
+Create a fresh python environment
+```shell
+cd raha
+conda env create -f benchmarks-env.yml
+```
 ## Usage
 #### Raha - 2LPC and 20LPC
 Both Raha versions will be executed by running:
 
-``python Raha/raha/eds_run_experiments/raha_not_enough_labels_column_wise.py``
+``python raha/raha/eds_run_experiments/raha_not_enough_labels_column_wise.py``
 
+This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/column_wise.yaml`` and 
+``raha/raha/eds_run_experiments/hydra_configs/shared.yaml``
 #### Raha - RT
 This version can be executed by running:
 
-``python Raha/raha/eds_run_experiments/raha_not_enough_labels_lake.py``
+``python raha/raha/eds_run_experiments/raha_not_enough_labels_lake.py``
 
+This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/table_wise.yaml`` and 
+``raha/raha/eds_run_experiments/hydra_configs/shared.yaml``
 #### Raha - Standard
 The standard Raha version can be executed by running:
 
-``python Raha/raha/eds_run_experiments/raha_enough_labels_lake.py``
+``python raha/raha/eds_run_experiments/raha_enough_labels_lake.py``
+
+This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/shared.yaml`` and 
+``raha/raha/eds_run_experiments/hydra_configs/shared.yaml``
