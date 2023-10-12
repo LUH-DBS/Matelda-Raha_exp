@@ -19,3 +19,17 @@ In this version, the datasets are shuffled and then assigned one label at a time
    pip install -e .
    ```
 ## Usage
+#### Raha - 2LPC and 20LPC
+Both Raha versions will be executed by running:
+
+``python Raha/raha/eds_run_experiments/raha_not_enough_labels_column_wise.py``
+
+#### Raha - RT
+This version can be executed by running:
+
+``python Raha/raha/eds_run_experiments/raha_not_enough_labels_lake.py``
+
+#### Raha - Standard
+The standard Raha version can be executed by running:
+
+``python Raha/raha/eds_run_experiments/raha_enough_labels_lake.py``
