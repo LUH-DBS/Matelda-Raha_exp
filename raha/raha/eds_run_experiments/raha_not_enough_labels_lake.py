@@ -3,6 +3,8 @@ import os
 import pickle
 from pathlib import Path
 from random import shuffle
+
+import hydra
 import pandas as pd
 from raha.detection import main
 
@@ -12,7 +14,7 @@ def run_raha(dataset_path, results_path, labeling_budget, exec_number):
          labeling_budget, exec_number, column_wise_evaluation=False, column_idx=0)
 
 
-def distribute_labels(labeling_budget_cells, sandbox_path):
+def distribute_labels(labeling_budget_cells, sandbox_path, results_path):
     datasets_shape = dict()
     datasets_budget = dict()
     datasets_num_cells = dict()
@@ -65,7 +67,7 @@ def distribute_labels(labeling_budget_cells, sandbox_path):
 def run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_number):
     for label_budget in labeling_budget_cells:
         logging.info(f"label_budget: {label_budget}")
-        datasets_budget = distribute_labels(label_budget, sandbox_path)
+        datasets_budget = distribute_labels(label_budget, sandbox_path, results_path)
         for dataset in datasets_budget:
             logging.info(f"dataset: {dataset}")
             try:
@@ -83,7 +85,7 @@ def run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_numb
 
 
 @hydra.main(version_base=None, config_path="hydra_configs", config_name="table_wise")
-def main(cfg):
+def start(cfg):
     logging.basicConfig(filename=str(Path(cfg["logs"]["path_to_log_file"]).resolve()),
                         level=logging.DEBUG)
 
@@ -107,4 +109,4 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main()
+    start()

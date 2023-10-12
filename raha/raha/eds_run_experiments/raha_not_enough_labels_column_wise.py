@@ -67,7 +67,7 @@ def run_experiments(sandbox_path, results_path, labeling_budget_cells, exec_numb
 
 
 @hydra.main(version_base=None, config_path="hydra_configs", config_name="column_wise")
-def main(cfg):
+def start(cfg):
     logging.basicConfig(filename=str(Path(cfg["logs"]["path_to_log_file"]).resolve()),
                         level=logging.DEBUG)
 
@@ -94,4 +94,4 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main()
+    start()
