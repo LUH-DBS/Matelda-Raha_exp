@@ -17,3 +17,4 @@ dependencies:
     - nltk==3.7
     - -e ./ .
     - pandasql
+    - hydra-core
