@@ -1,9 +1,0 @@
-defaults:
-  - _self_
-  - shared
-
-experiment:
-  labeling_budgets: [1, 2, 3, 5, 10, 15, 20]
-
-logs:
-  path_to_log_file: "./logs/raha-Standard.log"
