@@ -1,0 +1,5 @@
+shared:
+  sandbox_path: "./test_sandbox" # path pointing to the data lake, where the experiments should be executed
+  results_path: "./results"
+
+  repetitions: 5
