@@ -42,7 +42,7 @@ def distribute_labels(labeling_budget_cells, sandbox_path, results_path):
     if labeling_budget_cells % num_cols == 0:
         labeling_budget_tuples_per_table = labeling_budget_cells / num_cols
         for dataset in datasets_shape:
-            datasets_budget[dataset] = labeling_budget_tuples_per_table
+            datasets_budget[dataset] = round(labeling_budget_tuples_per_table)
     else:
         asssigned_labels = 0
         non_eligable_datasets = 0

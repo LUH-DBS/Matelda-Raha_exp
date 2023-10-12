@@ -8,7 +8,7 @@ import hydra
 from raha.detection import main
 
 
-@hydra.main(version_base=None, config_path="hydra_configs", config_name="table_wise")
+@hydra.main(version_base=None, config_path="hydra_configs", config_name="standard")
 def start(cfg):
     exp_name = "raha-enough-labels"
     logging.basicConfig(filename=str(Path(cfg["logs"]["path_to_log_file"]).resolve()), level=logging.DEBUG)
