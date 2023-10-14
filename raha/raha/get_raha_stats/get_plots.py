@@ -144,17 +144,18 @@ def plot(total_results, res_df_eds, plot_path, dataset_name):
 repition = range(1, 6)
 n_cols = 768
 labeling_budgets = [1, 2, 3, 5, 10, 15, 20]
-sandbox_path = "/home/fatemeh/VLDB-Aug/EDS-Raha_exp/Raha/raha/datasets/data-dgov/output_lake_high_percent_processed"
-results_path = "/home/fatemeh/VLDB-Aug/results/raha-dgov/exp_raha-enough-labels_dgov"
-df_path = "/home/fatemeh/VLDB-Aug/EDS-Raha_exp/Raha/benchmark-results/raha-dgov-e.csv"
+sandbox_path = "./raha/raha/datasets/data-dgov/output_lake_high_percent_processed"
+results_path = "./results/raha-dgov/exp_raha-enough-labels_dgov"
+df_path = "./raha/benchmark-results/raha-dgov-e.csv"
 
 total_results = get_raha_res(repition, labeling_budgets, sandbox_path, results_path, df_path, n_cols)
 
 # labeling_budgets = [500, 1000, 2015, 4030, 6045, 8060, 10075, 12090, 14105, 16120]
 # exp_name = "_dgov-old"
-# path = "/home/fatemeh/ED-Scale/marshmallow_pipeline/output/kaggle-dataset/dgov-old-min-2/"
+# path_prefix_to_ED_SCALE = "your_path_towards_ED-Scale_repository" # this needs to be set before execution set to the path that Points toward the ED-Scale repository
+# path = path_prefix_to_ED_SCALE + "/marshmallow_pipeline/output/kaggle-dataset/dgov-old-min-2/"
 # res_df_eds = get_eds_res(path, exp_name, labeling_budgets)
 
-# plot_path = "/home/fatemeh/EDS-BaseLines/Raha/pictures/KMeans"
+# plot_path = "./raha/pictures/KMeans"
 # dataset_name = "dgov-old"
 # plot(total_results, res_df_eds, plot_path, dataset_name)
