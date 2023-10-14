@@ -17,6 +17,7 @@ Create a fresh python environment
 ```shell
 cd raha
 conda env create -f benchmarks-env.yml
+cd ..
 ```
 ## Usage
 #### Raha - 2LPC and 20LPC
