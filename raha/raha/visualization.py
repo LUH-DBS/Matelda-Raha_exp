@@ -2,16 +2,16 @@ import pandas as pd
 from sqlalchemy import sql
 import pandasql as ps
 import json
-import os 
+import os
 import matplotlib.pyplot as plt
 
-
 repition = range(1, 11)
-#datasets = ["beers", "flights", "hospital", "movies_1", "rayyan"]
+# datasets = ["beers", "flights", "hospital", "movies_1", "rayyan"]
 
-sandbox_path = "/home/fatemeh/ED-Scale/Sandbox_Generation/data-gov-sandbox"
-results_path = "/home/fatemeh/ED-Scale/Sandbox_Generation/data-gov-raha-results-1/"
-dir_levels = 1 # That means we have files in each subdirectory of sandbox dir
+path_prefix_to_ED_SCALE = "your_path_towards_ED-Scale_repository"  # this needs to be set before execution set to the path that Points toward the ED-Scale repository
+sandbox_path = path_prefix_to_ED_SCALE + "/Sandbox_Generation/data-gov-sandbox"
+results_path = path_prefix_to_ED_SCALE + "/home/fatemeh/ED-Scale/Sandbox_Generation/data-gov-raha-results-1/"
+dir_levels = 1  # That means we have files in each subdirectory of sandbox dir
 datasets = []
 
 if dir_levels == 1:
@@ -21,16 +21,16 @@ if dir_levels == 1:
 labeling_budgets = range(1, 21)
 algorithm = 'raha'
 
-results_dict = {"algorithm":[], "dataset":[], "execution_number":[], 
-              "precision": [], "recall": [], "f_score": [],
+results_dict = {"algorithm": [], "dataset": [], "execution_number": [],
+                "precision": [], "recall": [], "f_score": [],
                 "tp": [], "ed_tpfp": [], "ed_tpfn": [], "execution_time": [],
-                 "number_of_labeled_tuples": [], "number_of_labeled_cells": []}
+                "number_of_labeled_tuples": [], "number_of_labeled_cells": []}
 
 for i in repition:
     for dataset in datasets:
         for label_budget in labeling_budgets:
-            file_path = os.path.join(results_path,'{}_{}_number#{}_${}$labels.json'\
-                        .format(algorithm, dataset, str(i), str(label_budget)))
+            file_path = os.path.join(results_path, '{}_{}_number#{}_${}$labels.json' \
+                                     .format(algorithm, dataset, str(i), str(label_budget)))
             if os.path.exists(file_path):
                 with open(file_path) as file:
                     json_content = json.load(file)
@@ -49,7 +49,7 @@ for i in repition:
             else:
                 # print("The file does not exist: {}".format(file_path))
                 print()
-    
+
 result_df = pd.DataFrame.from_dict(results_dict)
 # result_df.to_csv("Benchmarks/raha/results/results_all_{}.csv".format(algorithm))
 
@@ -66,66 +66,61 @@ query = 'SELECT number_of_labeled_tuples, SUM(finall_precision)/10, SUM(finall_r
                     FROM result_df GROUP BY execution_number, number_of_labeled_tuples)) GROUP BY number_of_labeled_tuples'
 query_df = ps.sqldf(query)
 
-number_of_labeled_cells_query = 'SELECT algorithm, number_of_labeled_tuples, SUM(number_of_labeled_cells) FROM result_df WHERE execution_number = 1 GROUP BY number_of_labeled_tuples' 
+number_of_labeled_cells_query = 'SELECT algorithm, number_of_labeled_tuples, SUM(number_of_labeled_cells) FROM result_df WHERE execution_number = 1 GROUP BY number_of_labeled_tuples'
 number_of_labeled_cells = ps.sqldf(number_of_labeled_cells_query)['SUM(number_of_labeled_cells)']
 # x axis values
 x = number_of_labeled_cells
 # corresponding y axis values
 y = list(query_df['SUM(finall_f_score)/10'])
-  
+
 # plotting the points 
-plt.plot(x, y, linestyle='-', marker='o', color = 'red')
-  
+plt.plot(x, y, linestyle='-', marker='o', color='red')
+
 # naming the x axis
 plt.xlabel('Number of labelled data cells')
 # naming the y axis
 plt.ylabel('F-Score')
-  
+
 # giving a title to my graph
 plt.title('Raha-FScore')
-  
+
 # # function to show the plot
 # plt.show()
 plt.savefig('Benchmarks/raha/results/raha-f-score.png')
 plt.close()
 
-
 # x axis values
 x = number_of_labeled_cells
 # corresponding y axis values
 y = list(query_df['SUM(finall_precision)/10'])
-  
+
 # plotting the points 
-plt.plot(x, y, linestyle='-', marker='o', color = 'red')
-  
+plt.plot(x, y, linestyle='-', marker='o', color='red')
+
 # naming the x axis
 plt.xlabel('Number of labelled data cells')
 # naming the y axis
 plt.ylabel('Precision')
-  
+
 # giving a title to my graph
 plt.title('Raha-Precision')
 plt.savefig('Benchmarks/raha/results/raha-precision.png')
 plt.close()
 
-
 # x axis values
 x = number_of_labeled_cells
 # corresponding y axis values
 y = list(query_df['SUM(finall_recall)/10'])
-  
+
 # plotting the points 
-plt.plot(x, y, linestyle='-', marker='o', color = 'red')
-  
+plt.plot(x, y, linestyle='-', marker='o', color='red')
+
 # naming the x axis
 plt.xlabel('Number of labelled data cells')
 # naming the y axis
 plt.ylabel('Recall')
-  
+
 # giving a title to my graph
 plt.title('Raha-Recall')
 plt.savefig('Benchmarks/raha/results/raha-recall.png')
 plt.close()
-
-
-
