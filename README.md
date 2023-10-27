@@ -43,3 +43,9 @@ The standard Raha version can be executed by running:
 
 This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/shared.yaml`` and 
 ``raha/raha/eds_run_experiments/hydra_configs/shared.yaml``
+
+#### Results
+The results can be extracted with ``raha/raha/get_raha_stats/get_benchmark_results.py``. 
+Here every result json must be collected per hand and put into one folder. Then, after configuring the 
+config file ``raha/raha/eds_run_experiments/hydra_configs/results.yaml``, the results can be collected by running
+``python ./raha/raha/get_raha_stats/get_benchmark_results.py``
