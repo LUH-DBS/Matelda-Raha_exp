@@ -3,7 +3,8 @@ defaults:
   - shared
 
 experiment:
-  labeling_budgets: [1, 2, 3, 5, 10, 15, 20] # labeling budgets used in Raha
+  labeling_budgets: [2, 3, 5, 10, 15, 20] # labeling budgets used in Raha
+  n_columns: 38 # amount of columns in the data lake. not necessary here
 
 logs:
   path_to_log_file: "./logs/raha-Standard.log" # path pointing to the location where the logs should be stored

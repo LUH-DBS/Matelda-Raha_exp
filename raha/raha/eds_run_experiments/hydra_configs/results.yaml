@@ -1,0 +1,13 @@
+defaults:
+  - _self_
+  - shared
+
+  # Comment
+  # - table_wise
+  # - standard
+  - column_wise
+
+results:
+  path_to_benchmark_dataframe: "./raha/benchmark-results/benchmark_results.csv"
+  path_to_experiment_results_folder: "./results/test_sandbox/rest_res"
+  labeling_budget: [20] # 2 or 20. the number after $ in the json
