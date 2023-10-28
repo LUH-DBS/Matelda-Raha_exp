@@ -46,6 +46,10 @@ This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/
 
 #### Results
 The results can be extracted with ``raha/raha/get_raha_stats/get_benchmark_results.py``. 
-Here every result json must be collected per hand and put into one folder. Then, after configuring the 
-config file ``raha/raha/eds_run_experiments/hydra_configs/results.yaml``, the results can be collected by running
+
+1. Every result json must be collected per hand and put into one folder.
+   - Standard: all json files
+   - 2LPC, 20LPC and RT: all json files that have been run with the same labeling budget. This is recognizable at the 
+   first number at the ``results_??_?`` folder (marked with ??)
+2. Then, after configuring the config file ``raha/raha/eds_run_experiments/hydra_configs/results.yaml``, the results can be collected by running
 ``python ./raha/raha/get_raha_stats/get_benchmark_results.py``
