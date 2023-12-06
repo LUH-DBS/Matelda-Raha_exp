@@ -42,7 +42,7 @@ The standard Raha version can be executed by running:
 ``python raha/raha/eds_run_experiments/raha_enough_labels_lake.py``
 
 This version can be configured in ``raha/raha/eds_run_experiments/hydra_configs/shared.yaml`` and 
-``raha/raha/eds_run_experiments/hydra_configs/shared.yaml``
+``raha/raha/eds_run_experiments/hydra_configs/standard.yaml``
 
 #### Results
 The results can be extracted with ``raha/raha/get_raha_stats/get_benchmark_results.py``. 
