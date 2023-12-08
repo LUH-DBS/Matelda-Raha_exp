@@ -5,9 +5,11 @@ defaults:
   # Comment
   # - table_wise
   # - standard
-  - column_wise
+  - standard
 
 results:
-  path_to_benchmark_dataframe: "./raha/benchmark-results/benchmark_results.csv"
-  path_to_experiment_results_folder: "./results/test_sandbox/rest_res"
-  labeling_budget: [20] # 2 or 20. the number after $ in the json
+  path_to_benchmark_dataframe: "./raha/benchmark-results/benchmarks.csv"
+  path_to_experiment_results_folder: "./results"
+  labeling_budget: [2, 3, 5, 10, 15, 20]
+  n_columns: 975
+  variant: "standard" # standard, table_wise (for rt), column_wise (for XLPC)

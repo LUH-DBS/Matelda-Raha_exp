@@ -1,5 +1,6 @@
 shared:
   sandbox_path: "./test_sandbox" # path pointing to the data lake, where the experiments should be executed
   results_path: "./results" # path pointing towards a folder where the results of the experimetns should be stored
-
+  dirty_file_name: "dirty.csv" # name of the dirty file
+  clean_file_name: "clean.csv" # name of the clean file
   repetitions: 5 # the amount of time an experiment configuration should be executed
