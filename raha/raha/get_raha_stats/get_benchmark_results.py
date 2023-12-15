@@ -1,5 +1,7 @@
+import html
 import pickle
 from pathlib import Path
+import re
 
 import hydra
 import pandas as pd
@@ -8,19 +10,32 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-def get_eds_n_errors(base_path, table, dirty_file_name, clean_file_name):
-    dirty_df = pd.read_csv(os.path.join(base_path, table, dirty_file_name), keep_default_na=False, dtype=str).applymap(value_normalizer)
-    clean_df = pd.read_csv(os.path.join(base_path, table, clean_file_name), keep_default_na=False, dtype=str).applymap(value_normalizer)
-    if dirty_df.shape != clean_df.shape:
-        print("Shape mismatch")
-    dirty_df.columns = clean_df.columns
-    diff = dirty_df.compare(clean_df, keep_shape=True)
-    self_diff = diff.xs('self', axis=1, level=1)
-    other_diff = diff.xs('other', axis=1, level=1)
+def value_normalizer(value):
+    """
+    This method takes a value and minimally normalizes it.
+    """
+    if isinstance(value, str):
+        value = html.unescape(value)
+        value = re.sub("[\t\n ]+", " ", value, re.UNICODE)
+        value = value.strip("\t\n ")
+    return value
 
-    # Custom comparison. True (or 1) only when values are different and not both NaN.
-    label_df = ((self_diff != other_diff) & ~(self_diff.isna() & other_diff.isna())).astype(int)
-    return label_df.sum().sum()
+def get_eds_n_errors(base_path, dirty_file_name, clean_file_name):
+    total_n_errors = 0
+    tables = os.listdir(base_path)
+    for table in tables:
+        dirty_df = pd.read_csv(os.path.join(base_path, table, dirty_file_name), keep_default_na=False, dtype=str).applymap(value_normalizer)
+        clean_df = pd.read_csv(os.path.join(base_path, table, clean_file_name), keep_default_na=False, dtype=str).applymap(value_normalizer)
+        if dirty_df.shape != clean_df.shape:
+            print("Shape mismatch")
+        dirty_df.columns = clean_df.columns
+        diff = dirty_df.compare(clean_df, keep_shape=True)
+        self_diff = diff.xs('self', axis=1, level=1)
+        other_diff = diff.xs('other', axis=1, level=1)
+        # Custom comparison. True (or 1) only when values are different and not both NaN.
+        label_df = ((self_diff != other_diff) & ~(self_diff.isna() & other_diff.isna())).astype(int)
+        total_n_errors += label_df.sum().sum()
+    return total_n_errors
 
 def get_results_df(sandbox_path, results_path, algorithm, repition, labeling_budgets):
     datasets = []
@@ -123,7 +138,7 @@ def get_raha_res(repitions, labeling_budgets, sandbox_path, results_path, df_pat
     total_results.to_csv(df_path, index=False)
     return total_results
 
-def get_raha_res_not_standard(labeling_budget, executions, res_path, tp_fn, n_cols):
+def get_raha_res_not_standard(labeling_budget, executions, res_path, tp_fn, n_cols, df_path):
     results = {"labeling_budget": [], "precision": [], "recall": [], "f_score": [], "f_score_std": []}
     labeling_budget_cells = [round(n_cols*x) for x in labeling_budget]
     for l in labeling_budget_cells:
@@ -157,7 +172,7 @@ def get_raha_res_not_standard(labeling_budget, executions, res_path, tp_fn, n_co
         results["f_score"].append(avg_f_score)
         results["f_score_std"].append(pd.Series(f_scores).std())
         results_df = pd.DataFrame.from_dict(results)
-        results_df.to_csv(os.path.join(res_path, "results.csv"), index=False)
+        results_df.to_csv(df_path, index=False)
     return results_df
 
 @hydra.main(version_base=None, config_path="../eds_run_experiments/hydra_configs", config_name="results")
@@ -175,8 +190,8 @@ def main(cfg):
         total_results = get_raha_res(repition, labeling_budgets, sandbox_path, results_path, df_path, n_cols)
     else:
         print("variant is not standard")
-        tp_fn = get_eds_n_errors(sandbox_path, sandbox_path, dirty_file_name, clean_file_name)
-        total_results = get_raha_res_not_standard(labeling_budgets, repition, results_path, tp_fn, n_cols)
+        tp_fn = get_eds_n_errors(sandbox_path, dirty_file_name, clean_file_name)
+        total_results = get_raha_res_not_standard(labeling_budgets, repition, results_path, tp_fn, n_cols, df_path)
 
 if __name__ == '__main__':
     main()
