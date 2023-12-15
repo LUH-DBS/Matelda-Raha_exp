@@ -123,7 +123,7 @@ def get_raha_res(repitions, labeling_budgets, sandbox_path, results_path, df_pat
     total_results.to_csv(df_path, index=False)
     return total_results
 
-def get_raha_not_standard(labeling_budget, executions, res_path, tp_fn):
+def get_raha_res_not_standard(labeling_budget, executions, res_path, tp_fn, n_cols):
     results = {"labeling_budget": [], "precision": [], "recall": [], "f_score": [], "f_score_std": []}
     labeling_budget_cells = [round(n_cols*x) for x in labeling_budget]
     for l in labeling_budget_cells:
@@ -176,7 +176,7 @@ def main(cfg):
     else:
         print("variant is not standard")
         tp_fn = get_eds_n_errors(sandbox_path, sandbox_path, dirty_file_name, clean_file_name)
-        total_results = get_raha_not_standard(labeling_budgets, repition, results_path, tp_fn)
+        total_results = get_raha_res_not_standard(labeling_budgets, repition, results_path, tp_fn, n_cols)
 
 if __name__ == '__main__':
     main()
