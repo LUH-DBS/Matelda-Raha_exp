@@ -1,4 +1,4 @@
-# EDS - Raha Variants
+# Matelda - Raha Variants
 This repository contains several variants of Raha. Specifically, there are three different label distribution variations.
 
 To run the precision experiment, please use this repo: https://anonymous.4open.science/r/EDS-Precision-Exp-2656/README.md
