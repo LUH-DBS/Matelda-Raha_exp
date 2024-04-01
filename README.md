@@ -1,8 +1,8 @@
 # Matelda - Raha Variants
 This repository contains several variants of Raha. Specifically, there are three different label distribution variations.
 
-To run the precision experiment, please use this repo: https://anonymous.4open.science/r/EDS-Precision-Exp-2656/README.md
-
+To run the precision experiment, please use this repo: [https://anonymous.4open.science/r/EDS-Precision-Exp-2656/README.md
+](https://github.com/LUH-DBS/Matelda-Precision-Exp)
 ### Raha - 2LabelsPerCol (2LPC)
 In this version, Raha randomly selects one column at a time and labels two cells from that column. 
 This is repeated until the labeling budget is exhausted.
